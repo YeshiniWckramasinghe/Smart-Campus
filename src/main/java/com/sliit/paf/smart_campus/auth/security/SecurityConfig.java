@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/api/lecturer/**").hasAuthority("LECTURER")
-                .requestMatchers("/api/student/**").hasAuthority("STUDENT")
+                .requestMatchers("/api/technician/**").hasAuthority("TECHNICIAN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
