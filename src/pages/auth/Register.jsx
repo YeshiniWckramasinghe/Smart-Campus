@@ -51,7 +51,8 @@ const Register = () => {
     { value: 'LECTURER', label: 'Lecturer', icon: '👨‍🏫', desc: 'Book facilities & report incidents' },
     { value: 'TECHNICIAN', label: 'Technician', icon: '🔧', desc: 'Handle maintenance tickets' },
     { value: 'ADMIN', label: 'Admin', icon: '⚙️', desc: 'Manage all campus operations' },
-  ];
+    { value: 'USER', label: 'User', icon: '👤', desc: 'Access campus resources' },
+];
 
   return (
     <div className="min-h-screen flex">
