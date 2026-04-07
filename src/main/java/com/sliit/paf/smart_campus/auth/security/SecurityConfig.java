@@ -32,18 +32,18 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-    .requestMatchers("/api/auth/**").permitAll()
-    .requestMatchers("/login/oauth2/**").permitAll()
-    .requestMatchers("/oauth2/**").permitAll()
-    .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-    .requestMatchers("/api/lecturer/**").hasAuthority("LECTURER")
-    .requestMatchers("/api/technician/**").hasAuthority("TECHNICIAN")
-    .requestMatchers("/api/user/**").hasAnyAuthority("USER", "LECTURER")
-    .requestMatchers("/api/notifications/**").authenticated()
-    .anyRequest().authenticated()
-)
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/login/oauth2/**").permitAll()
+                .requestMatchers("/oauth2/**").permitAll()
+                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                .requestMatchers("/api/lecturer/**").hasAuthority("LECTURER")
+                .requestMatchers("/api/technician/**").hasAuthority("TECHNICIAN")
+                .requestMatchers("/api/user/**").hasAnyAuthority("USER", "LECTURER")
+                .requestMatchers("/api/notifications/**").authenticated()
+                .anyRequest().authenticated()
+            )
             .oauth2Login(oauth2 -> oauth2
                 .successHandler(oAuth2LoginSuccessHandler)
             )
@@ -60,13 +60,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:3000",
+            "http://localhost:3001"
+        ));
+        configuration.setAllowedMethods(Arrays.asList(
+            "GET", "POST", "PUT", "DELETE", "OPTIONS"
+        ));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-    
 }
