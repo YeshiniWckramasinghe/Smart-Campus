@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminDashboard from './AdminDashboard';
-import LecturerDashboard from './LecturerDashboard';
+import UserDashboard from './UserDashboard';
 import TechnicianDashboard from './TechnicianDashboard';
 
 const Dashboard = () => {
@@ -15,8 +15,8 @@ const Dashboard = () => {
   }
 
   if (user.role === 'ADMIN') return <AdminDashboard user={user} />;
-if (user.role === 'TECHNICIAN') return <TechnicianDashboard user={user} />;
-return <UserDashboard user={user} />; // LECTURER & USER 
+  if (user.role === 'TECHNICIAN') return <TechnicianDashboard user={user} />;
+  return <UserDashboard user={user} />;
 };
 
 export default Dashboard;
