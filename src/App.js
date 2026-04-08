@@ -5,6 +5,7 @@ import Footer from './components/layout/Footer';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Dashboard from './pages/dashboard/Dashboard';
+import Notifications from './pages/notifications/Notifications';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/notifications" element={<Notifications />} />
           </Routes>
         </main>
         <Footer />
