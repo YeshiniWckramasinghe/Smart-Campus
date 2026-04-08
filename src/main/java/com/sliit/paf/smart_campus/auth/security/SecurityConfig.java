@@ -43,6 +43,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/technician/**").hasAuthority("TECHNICIAN")
                 .requestMatchers("/api/user/**").hasAnyAuthority("USER", "LECTURER")
                 .requestMatchers("/api/notifications/**").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.PATCH, "/api/tickets/*/status").hasAnyAuthority("ADMIN", "TECHNICIAN")
+                .requestMatchers("/api/tickets/**").authenticated()
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
