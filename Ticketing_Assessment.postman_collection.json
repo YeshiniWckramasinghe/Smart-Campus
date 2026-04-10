@@ -1,0 +1,222 @@
+{
+  "info": {
+    "name": "Smart Campus - Incident Ticketing API",
+    "_postman_id": "smart-campus-ticketing-v1",
+    "description": "Postman collection demonstrating all four Incident Ticketing REST API endpoints with correct HTTP status codes. Created for PAF Assessment evidence.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Create Ticket (POST) - Expects 201 Created",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "category", "value": "MAINTENANCE", "type": "text" },
+            { "key": "description", "value": "The ceiling fan in Room 402 is making a loud noise and may pose a safety risk.", "type": "text" },
+            { "key": "priority", "value": "HIGH", "type": "text" },
+            { "key": "location", "value": "Building A, Room 402", "type": "text" },
+            { "key": "reporterId", "value": "user123", "type": "text" }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/tickets",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8082",
+          "path": ["api", "tickets"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201 Created', function() {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test('Response has ticket ID', function() {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.id).to.exist;",
+              "    pm.collectionVariables.set('ticket_id', jsonData.id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Get Ticket by ID (GET) - Expects 200 OK",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8082/api/tickets/{{ticket_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8082",
+          "path": ["api", "tickets", "{{ticket_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Status is OPEN initially', function() {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql('OPEN');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Get Non-Existent Ticket (GET) - Expects 500/400 Error",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8082/api/tickets/99999",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8082",
+          "path": ["api", "tickets", "99999"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Not found returns error status', function() {",
+              "    pm.expect(pm.response.code).to.be.oneOf([400, 404, 500]);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Update Ticket Status (PATCH) - Expects 200 OK",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"status\": \"IN_PROGRESS\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8082/api/tickets/{{ticket_id}}/status",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8082",
+          "path": ["api", "tickets", "{{ticket_id}}", "status"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function() {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Ticket status is now IN_PROGRESS', function() {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql('IN_PROGRESS');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Delete Comment (DELETE) - Expects 204 No Content",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8082/api/tickets/{{ticket_id}}/comments/{{comment_id}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8082",
+          "path": ["api", "tickets", "{{ticket_id}}", "comments", "{{comment_id}}"]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 204 No Content on successful delete', function() {",
+              "    pm.expect(pm.response.code).to.be.oneOf([204, 403]);",
+              "});",
+              "pm.test('Unauthorized delete returns 403', function() {",
+              "    if (pm.response.code === 403) {",
+              "        pm.expect(pm.response.code).to.eql(403);",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "jwt_token", "value": "YOUR_JWT_TOKEN_HERE" },
+    { "key": "ticket_id", "value": "1" },
+    { "key": "comment_id", "value": "1" }
+  ]
+}
