@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Steps, Card, Spin, message, Button, Tag } from 'antd';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -13,11 +13,7 @@ const TicketDetail = () => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const isStaff = user.role === 'ADMIN' || user.role === 'TECHNICIAN';
 
-    useEffect(() => {
-        fetchTicketDetails();
-    }, [id]);
-
-    const fetchTicketDetails = async () => {
+    const fetchTicketDetails = useCallback(async () => {
         try {
             const res = await axios.get(`/api/tickets/${id}`);
             setTicket(res.data);
@@ -26,7 +22,11 @@ const TicketDetail = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id]);
+
+    useEffect(() => {
+        fetchTicketDetails();
+    }, [fetchTicketDetails]);
 
     const updateStatus = async (newStatus) => {
         try {

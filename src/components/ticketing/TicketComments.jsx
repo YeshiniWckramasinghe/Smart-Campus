@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
-import { List, Input, Button, message, Avatar, Popconfirm } from 'antd';
+import React from 'react';
+import { List, Button, message, Avatar, Popconfirm } from 'antd';
 import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-const { TextArea } = Input;
-
 const TicketComments = ({ ticketId, initialComments, onUpdate }) => {
-    const [comments, setComments] = useState(initialComments || []);
+    const comments = initialComments || [];
     // Current user context mocked for assessment
     const currentUser = 'user123'; 
 

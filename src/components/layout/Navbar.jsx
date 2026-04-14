@@ -4,7 +4,7 @@ import { FaBell, FaBars, FaTimes, FaUserCircle, FaChevronDown } from 'react-icon
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadCount] = useState(0);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();

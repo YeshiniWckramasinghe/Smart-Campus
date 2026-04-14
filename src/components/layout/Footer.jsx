@@ -25,21 +25,21 @@ const Footer = () => {
             </p>
             {/* Social Icons */}
             <div className="flex space-x-3 mt-5">
-              <a href="#"
+              <button type="button"
                 className="bg-gray-800 hover:bg-blue-600 p-2 rounded-lg 
                            transition duration-200 border border-gray-700">
                 <FaFacebook size={16} />
-              </a>
-              <a href="#"
+              </button>
+              <button type="button"
                 className="bg-gray-800 hover:bg-blue-400 p-2 rounded-lg 
                            transition duration-200 border border-gray-700">
                 <FaTwitter size={16} />
-              </a>
-              <a href="#"
+              </button>
+              <button type="button"
                 className="bg-gray-800 hover:bg-blue-700 p-2 rounded-lg 
                            transition duration-200 border border-gray-700">
                 <FaLinkedin size={16} />
-              </a>
+              </button>
             </div>
           </div>
 
@@ -129,13 +129,13 @@ const Footer = () => {
             © 2026 Smart Campus — SLIIT. All rights reserved.
           </p>
           <div className="flex space-x-4 text-gray-500 text-sm">
-            <a href="#" className="hover:text-gray-300 transition duration-200">
+            <button type="button" className="hover:text-gray-300 transition duration-200">
               Privacy Policy
-            </a>
+            </button>
             <span>•</span>
-            <a href="#" className="hover:text-gray-300 transition duration-200">
+            <button type="button" className="hover:text-gray-300 transition duration-200">
               Terms of Service
-            </a>
+            </button>
           </div>
         </div>
       </div>

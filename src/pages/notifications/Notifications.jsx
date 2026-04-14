@@ -1,79 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+
+const sampleNotifications = [
+  {
+    id: 1,
+    title: 'Booking Approved',
+    message: 'Your booking for Lab A-101 on April 8, 2026 has been approved.',
+    type: 'BOOKING_APPROVED',
+    isRead: false,
+    createdAt: '2026-04-07T08:30:00'
+  },
+  {
+    id: 2,
+    title: 'Ticket Status Updated',
+    message: 'Your incident ticket #2 status has been updated to IN_PROGRESS.',
+    type: 'TICKET_STATUS_CHANGED',
+    isRead: false,
+    createdAt: '2026-04-07T07:15:00'
+  },
+  {
+    id: 3,
+    title: 'New Comment on Ticket',
+    message: 'Technician added a comment on your ticket: "Will fix by tomorrow".',
+    type: 'NEW_COMMENT',
+    isRead: true,
+    createdAt: '2026-04-06T15:00:00'
+  },
+  {
+    id: 4,
+    title: 'Booking Rejected',
+    message: 'Your booking for Hall B-201 has been rejected. Reason: Already booked.',
+    type: 'BOOKING_REJECTED',
+    isRead: true,
+    createdAt: '2026-04-06T10:00:00'
+  },
+  {
+    id: 5,
+    title: 'Booking Approved',
+    message: 'Your booking for Meeting Room C-101 has been approved.',
+    type: 'BOOKING_APPROVED',
+    isRead: true,
+    createdAt: '2026-04-05T14:00:00'
+  }
+];
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('ALL');
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const token = localStorage.getItem('token');
-
-  // Sample data (backend connect වෙන්නකොට replace වෙනවා)
-  const sampleNotifications = [
-    {
-      id: 1,
-      title: 'Booking Approved',
-      message: 'Your booking for Lab A-101 on April 8, 2026 has been approved.',
-      type: 'BOOKING_APPROVED',
-      isRead: false,
-      createdAt: '2026-04-07T08:30:00'
-    },
-    {
-      id: 2,
-      title: 'Ticket Status Updated',
-      message: 'Your incident ticket #2 status has been updated to IN_PROGRESS.',
-      type: 'TICKET_STATUS_CHANGED',
-      isRead: false,
-      createdAt: '2026-04-07T07:15:00'
-    },
-    {
-      id: 3,
-      title: 'New Comment on Ticket',
-      message: 'Technician added a comment on your ticket: "Will fix by tomorrow".',
-      type: 'NEW_COMMENT',
-      isRead: true,
-      createdAt: '2026-04-06T15:00:00'
-    },
-    {
-      id: 4,
-      title: 'Booking Rejected',
-      message: 'Your booking for Hall B-201 has been rejected. Reason: Already booked.',
-      type: 'BOOKING_REJECTED',
-      isRead: true,
-      createdAt: '2026-04-06T10:00:00'
-    },
-    {
-      id: 5,
-      title: 'Booking Approved',
-      message: 'Your booking for Meeting Room C-101 has been approved.',
-      type: 'BOOKING_APPROVED',
-      isRead: true,
-      createdAt: '2026-04-05T14:00:00'
-    },
-  ];
-
   useEffect(() => {
-    // Backend connect වෙන්නකොට:
-    // fetchNotifications();
     setNotifications(sampleNotifications);
     setLoading(false);
   }, []);
-
-  const fetchNotifications = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8082/api/notifications/${user.email}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setNotifications(response.data);
-    } catch (err) {
-      console.error('Failed to fetch notifications');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const markAsRead = async (id) => {
     try {
