@@ -34,6 +34,12 @@ build/
 
 .env
 
-application.properties
 
-src/main/resources/application.properties
+
+
+
+# Local environment config (sensitive data)
+application-local.properties
+
+# Local environment config (sensitive data)
+src/main/resources/application-local.properties
