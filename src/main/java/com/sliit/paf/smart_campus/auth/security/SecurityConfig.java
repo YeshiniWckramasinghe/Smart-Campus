@@ -3,12 +3,15 @@ package com.sliit.paf.smart_campus.auth.security;
 import com.sliit.paf.smart_campus.auth.service.OAuth2LoginSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -34,18 +37,21 @@ public class SecurityConfig {
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/error", "/favicon.ico").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/login/oauth2/**").permitAll()
-                .requestMatchers("/oauth2/**").permitAll()
-                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-                .requestMatchers("/api/lecturer/**").hasAuthority("LECTURER")
-                .requestMatchers("/api/technician/**").hasAuthority("TECHNICIAN")
-                .requestMatchers("/api/user/**").hasAnyAuthority("USER", "LECTURER")
-                .requestMatchers("/api/notifications/**").authenticated()
-                .requestMatchers(org.springframework.http.HttpMethod.PATCH, "/api/tickets/*/status").hasAnyAuthority("ADMIN", "TECHNICIAN")
-                .requestMatchers("/api/tickets/**").authenticated()
-                .anyRequest().authenticated()
+    .requestMatchers("/api/auth/**").permitAll()
+    .requestMatchers("/login/oauth2/**").permitAll()
+    .requestMatchers("/oauth2/**").permitAll()
+    .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+    .requestMatchers("/api/lecturer/**").hasAuthority("LECTURER")
+    .requestMatchers("/api/technician/**").hasAuthority("TECHNICIAN")
+    .requestMatchers("/api/user/**").hasAnyAuthority("USER", "LECTURER")
+    .requestMatchers("/api/notifications/**").authenticated()
+    .anyRequest().authenticated()
+)
+            .exceptionHandling(ex -> ex
+                .defaultAuthenticationEntryPointFor(
+                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                    new AntPathRequestMatcher("/api/**")
+                )
             )
             .oauth2Login(oauth2 -> oauth2
                 .successHandler(oAuth2LoginSuccessHandler)

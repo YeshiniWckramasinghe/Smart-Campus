@@ -18,24 +18,28 @@ const TicketReportForm = () => {
         setLoading(true);
         try {
             const formData = new FormData();
+            const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
             formData.append('category', values.category);
             formData.append('description', values.description);
             formData.append('priority', values.priority);
             formData.append('location', values.location);
-            // Replace with actual user ID mechanism
-            formData.append('reporterId', 'user123'); 
+            formData.append('reporterId', currentUser.email || currentUser.name || 'anonymousUser');
             
             fileList.forEach(file => {
                 formData.append('files', file.originFileObj);
             });
 
-            const res = await axios.post('/api/tickets', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            const res = await axios.post('/api/tickets', formData);
 
             message.success('Incident Ticket created successfully!');
             navigate(`/tickets/${res.data.id}`);
         } catch (error) {
+            if (error.response?.status === 401) {
+                message.error('Please sign in again before creating a ticket.');
+                navigate('/login');
+                return;
+            }
+
             message.error('Failed to create ticket. ' + (error.response?.data?.message || 'Server Error'));
         } finally {
             setLoading(false);
