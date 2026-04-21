@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Tag, Space, Button, message } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const TicketDashboard = () => {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
 
     useEffect(() => {
         fetchTickets();
@@ -13,19 +14,12 @@ const TicketDashboard = () => {
 
     const fetchTickets = async () => {
         try {
-            // Ideally we'd have a GET /api/tickets endpoint, but for now we might mock it or assume it exists.
-            // Let's assume GET /api/tickets returns a list of tickets.
-            // Wait, does GET /api/tickets exist? Let's check backend later. We didn't add GET /api/tickets in Phase 2!
-            // I will add a mock for now and try actual endpoint if possible.
-            const response = await axios.get('/api/tickets');
+            const endpoint = location.pathname === '/tickets/all' ? '/api/tickets' : '/api/tickets/my';
+            const response = await axios.get(endpoint);
             setTickets(response.data);
         } catch (error) {
             message.error("Failed to load tickets: " + (error.response?.data?.message || 'Server Error'));
-            // Mock data fallback if endpoint fails
-            setTickets([
-                { id: 1, category: 'IT', priority: 'HIGH', status: 'OPEN', location: 'Room 402', reporterId: 'user123' },
-                { id: 2, category: 'MAINTENANCE', priority: 'MEDIUM', status: 'IN_PROGRESS', location: 'Main Hall', reporterId: 'admin' }
-            ]);
+            setTickets([]);
         } finally {
             setLoading(false);
         }

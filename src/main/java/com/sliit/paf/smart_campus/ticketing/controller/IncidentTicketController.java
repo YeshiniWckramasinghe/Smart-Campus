@@ -11,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/tickets")
 public class IncidentTicketController {
@@ -23,18 +25,48 @@ public class IncidentTicketController {
 
     @PostMapping
     public ResponseEntity<IncidentTicket> createTicket(
-            @Valid @ModelAttribute CreateTicketRequest request) {
+            @Valid @ModelAttribute CreateTicketRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
 
         IncidentTicket ticket = new IncidentTicket();
         ticket.setCategory(request.getCategory());
         ticket.setDescription(request.getDescription());
         ticket.setPriority(request.getPriority());
-        ticket.setReporterId(request.getReporterId());
+        if (userDetails != null) {
+            ticket.setReporterId(userDetails.getUsername());
+        } else {
+            ticket.setReporterId(request.getReporterId());
+        }
         ticket.setLocation(request.getLocation());
 
         IncidentTicket createdTicket = ticketService.createTicket(ticket, request.getFiles());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTicket);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<IncidentTicket>> getTickets(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        boolean canViewAll = userDetails.getAuthorities().stream()
+                .anyMatch(a -> "ADMIN".equals(a.getAuthority()) || "TECHNICIAN".equals(a.getAuthority()));
+
+        List<IncidentTicket> tickets = canViewAll
+                ? ticketService.getAllTickets()
+                : ticketService.getTicketsByReporterId(userDetails.getUsername());
+
+        return ResponseEntity.ok(tickets);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<IncidentTicket>> getMyTickets(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok(ticketService.getTicketsByReporterId(userDetails.getUsername()));
     }
 
     @GetMapping("/{id}")

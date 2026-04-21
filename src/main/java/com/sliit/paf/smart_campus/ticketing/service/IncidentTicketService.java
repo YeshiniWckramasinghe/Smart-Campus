@@ -91,6 +91,10 @@ public class IncidentTicketService {
         return ticketRepository.findAll();
     }
 
+    public List<IncidentTicket> getTicketsByReporterId(String reporterId) {
+        return ticketRepository.findByReporterId(reporterId);
+    }
+
     public IncidentTicket getTicketById(Long ticketId) {
         return ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new IllegalArgumentException("Ticket not found with id: " + ticketId));
