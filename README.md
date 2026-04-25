@@ -46,6 +46,14 @@ Any attempt to skip a state or revert will throw an `IllegalStateException`.
 ```
 Backend runs on: `http://localhost:8082`
 
+By default the backend uses an in-memory H2 database (configured in `src/main/resources/application.properties`).
+To use MySQL instead, set environment variables before running:
+
+- `DB_URL` (example: `jdbc:mysql://HOST:PORT/DB_NAME`)
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `DB_DRIVER` (example: `com.mysql.cj.jdbc.Driver`)
+
 ### Frontend
 ```bash
 npm install
