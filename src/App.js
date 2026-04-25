@@ -13,6 +13,7 @@ import TicketDashboard from './pages/ticketing/TicketDashboard';
 import TicketReportForm from './pages/ticketing/TicketReportForm';
 import TicketDetail from './pages/ticketing/TicketDetail';
 import OAuth2Success from './pages/auth/OAuth2Success';
+import ResourceBookingForm from './pages/bookings/ResourceBookingForm';
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
@@ -44,6 +45,7 @@ function App() {
               <Route path="/tickets/all" element={<TicketDashboard />} />
               <Route path="/tickets/new" element={<TicketReportForm />} />
               <Route path="/tickets/:id" element={<TicketDetail />} />
+              <Route path="/bookings/new" element={<ResourceBookingForm />} />
             </Routes>
           </main>
           <Footer />
