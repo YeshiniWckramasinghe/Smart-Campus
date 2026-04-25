@@ -27,7 +27,7 @@ public class FacilityService {
         facility.setType(request.getType());
         facility.setCapacity(request.getCapacity());
         facility.setLocation(request.getLocation());
-        facility.setAvailabilityWindows(request.getAvailabilityWindows());
+        facility.setDescription(request.getDescription());
         if (request.getStatus() != null) {
             facility.setStatus(request.getStatus());
         }
@@ -62,7 +62,7 @@ public class FacilityService {
         facility.setType(request.getType());
         facility.setCapacity(request.getCapacity());
         facility.setLocation(request.getLocation());
-        facility.setAvailabilityWindows(request.getAvailabilityWindows());
+        facility.setDescription(request.getDescription());
         if (request.getStatus() != null) {
             facility.setStatus(request.getStatus());
         }

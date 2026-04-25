@@ -21,7 +21,7 @@ public class FacilityRequest {
     @NotBlank(message = "Location is required")
     private String location;
 
-    private String availabilityWindows;
+    private String description;
 
     private FacilityStatus status;
 
@@ -57,12 +57,12 @@ public class FacilityRequest {
         this.location = location;
     }
 
-    public String getAvailabilityWindows() {
-        return availabilityWindows;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAvailabilityWindows(String availabilityWindows) {
-        this.availabilityWindows = availabilityWindows;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public FacilityStatus getStatus() {

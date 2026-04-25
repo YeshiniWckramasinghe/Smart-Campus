@@ -28,8 +28,8 @@ public class Facility {
     private String location;
 
     // Optional field to store JSON or a string like "08:00-18:00"
-    @Column(name = "availability_windows")
-    private String availabilityWindows;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -82,12 +82,12 @@ public class Facility {
         this.location = location;
     }
 
-    public String getAvailabilityWindows() {
-        return availabilityWindows;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAvailabilityWindows(String availabilityWindows) {
-        this.availabilityWindows = availabilityWindows;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public FacilityStatus getStatus() {
