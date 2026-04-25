@@ -29,4 +29,11 @@ public class CreateTicketRequest {
     
     // We can also accept files here if passed in multipart forms
     private List<MultipartFile> files;
+
+    public String getReporterId() { return reporterId; }
+    public void setReporterId(String reporterId) { this.reporterId = reporterId; }
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+    public List<MultipartFile> getFiles() { return files; }
+    public void setFiles(List<MultipartFile> files) { this.files = files; }
 }

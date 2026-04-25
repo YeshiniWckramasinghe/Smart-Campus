@@ -9,4 +9,7 @@ public class UpdateStatusRequest {
 
     @NotNull(message = "Status cannot be null")
     private TicketStatus status;
+
+    public TicketStatus getStatus() { return status; }
+    public void setStatus(TicketStatus status) { this.status = status; }
 }
