@@ -174,6 +174,7 @@ if (!$actualDistributionDir) {
 }
 
 Write-Verbose "Found extracted Maven distribution directory: $actualDistributionDir"
+Start-Sleep -Seconds 2
 Rename-Item -Path "$TMP_DOWNLOAD_DIR/$actualDistributionDir" -NewName $MAVEN_HOME_NAME | Out-Null
 try {
   Move-Item -Path "$TMP_DOWNLOAD_DIR/$MAVEN_HOME_NAME" -Destination $MAVEN_HOME_PARENT | Out-Null
