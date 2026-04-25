@@ -53,4 +53,9 @@ public class IncidentTicket {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public String getReporterId() { return reporterId; }
+    public void setReporterId(String reporterId) { this.reporterId = reporterId; }
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
 }
