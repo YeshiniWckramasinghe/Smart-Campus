@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:8082",
+  "engines": {
+    "node": ">=18 <21"
+  },
   "dependencies": {
     "@ant-design/icons": "^6.1.1",
     "@testing-library/dom": "^10.4.1",
