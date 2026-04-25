@@ -18,6 +18,9 @@ const StatCard = ({ title, value, icon, gradient }) => (
 );
 
 const FacilityManager = () => {
+  const user = JSON.parse(localStorage.getItem('user')) || {};
+  const isAdmin = user.role === 'ADMIN';
+
   const [facilities, setFacilities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -31,7 +34,7 @@ const FacilityManager = () => {
   const fetchFacilities = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8082/api/admin/facilities');
+      const response = await axios.get('http://localhost:8082/api/facilities');
       setFacilities(response.data);
     } catch (error) {
       message.error('Failed to fetch facilities');
@@ -172,12 +175,16 @@ const FacilityManager = () => {
           <Tooltip title="View Details">
             <Button type="text" className="text-blue-500 hover:text-blue-700 hover:bg-blue-50" icon={<EyeOutlined />} onClick={() => handleView(record)} />
           </Tooltip>
-          <Tooltip title="Edit">
-            <Button type="text" className="text-orange-500 hover:text-orange-700 hover:bg-orange-50" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
-          </Tooltip>
-          <Tooltip title="Delete">
-            <Button type="text" danger className="hover:bg-red-50" icon={<DeleteOutlined />} onClick={() => handleDelete(record.id)} />
-          </Tooltip>
+          {isAdmin && (
+            <>
+              <Tooltip title="Edit">
+                <Button type="text" className="text-orange-500 hover:text-orange-700 hover:bg-orange-50" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+              </Tooltip>
+              <Tooltip title="Delete">
+                <Button type="text" danger className="hover:bg-red-50" icon={<DeleteOutlined />} onClick={() => handleDelete(record.id)} />
+              </Tooltip>
+            </>
+          )}
         </Space>
       ),
     },
@@ -195,15 +202,17 @@ const FacilityManager = () => {
             <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight">Facility Hub</h1>
             <p className="text-blue-200 text-lg max-w-xl">Monitor, manage, and configure all campus facilities and resources from a central command center.</p>
           </div>
-          <Button 
-            type="primary" 
-            size="large" 
-            icon={<PlusOutlined />} 
-            onClick={handleAdd}
-            className="mt-6 md:mt-0 bg-blue-500 hover:bg-blue-400 border-none shadow-lg shadow-blue-500/50 h-12 px-8 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105"
-          >
-            New Facility
-          </Button>
+          {isAdmin && (
+            <Button 
+              type="primary" 
+              size="large" 
+              icon={<PlusOutlined />} 
+              onClick={handleAdd}
+              className="mt-6 md:mt-0 bg-blue-500 hover:bg-blue-400 border-none shadow-lg shadow-blue-500/50 h-12 px-8 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105"
+            >
+              New Facility
+            </Button>
+          )}
         </div>
       </div>
 
