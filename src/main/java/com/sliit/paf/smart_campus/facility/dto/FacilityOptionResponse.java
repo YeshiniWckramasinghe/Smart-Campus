@@ -1,30 +1,13 @@
-package com.sliit.paf.smart_campus.facility.entity;
+package com.sliit.paf.smart_campus.facility.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "facilities")
-public class Facility {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class FacilityOptionResponse {
     private Long id;
-
-    @Column(nullable = false, unique = true)
     private String name;
-
     private String location;
-
     private Integer capacity;
 
-    public Facility() {
-    }
-
-    public Facility(String name) {
-        this.name = name;
-    }
-
-    public Facility(String name, String location, Integer capacity) {
+    public FacilityOptionResponse(Long id, String name, String location, Integer capacity) {
+        this.id = id;
         this.name = name;
         this.location = location;
         this.capacity = capacity;

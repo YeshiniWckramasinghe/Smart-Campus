@@ -86,9 +86,10 @@ const UserDashboard = ({ user }) => {
         {/* Quick Actions */}
         <div>
           <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { icon: '➕', label: 'New Booking', link: '/bookings/new', color: 'bg-blue-600' },
+              { icon: '📋', label: 'My Bookings', link: '/bookings/my', color: 'bg-indigo-600' },
               { icon: '🚨', label: 'Report Incident', link: '/tickets/new', color: 'bg-red-600' },
               { icon: '🔍', label: 'Browse Facilities', link: '/facilities', color: 'bg-green-600' },
             ].map((action, i) => (

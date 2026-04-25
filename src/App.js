@@ -14,7 +14,8 @@ import TicketReportForm from './pages/ticketing/TicketReportForm';
 import TicketDetail from './pages/ticketing/TicketDetail';
 import OAuth2Success from './pages/auth/OAuth2Success';
 import ResourceBookingForm from './pages/bookings/ResourceBookingForm';
-import FacilityManager from './pages/facilities/FacilityManager';
+import BookingApprovalList from './pages/bookings/BookingApprovalList';
+import MyBookings from './pages/bookings/MyBookings';
 
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
@@ -47,7 +48,8 @@ function App() {
               <Route path="/tickets/new" element={<TicketReportForm />} />
               <Route path="/tickets/:id" element={<TicketDetail />} />
               <Route path="/bookings/new" element={<ResourceBookingForm />} />
-              <Route path="/facilities" element={<FacilityManager />} />
+              <Route path="/bookings/my" element={<MyBookings />} />
+              <Route path="/bookings/all" element={<BookingApprovalList />} />
             </Routes>
           </main>
           <Footer />
