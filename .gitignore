@@ -33,13 +33,4 @@ build/
 .vscode/
 
 .env
-
-
-
-
-
-# Local environment config (sensitive data)
-application-local.properties
-
-# Local environment config (sensitive data)
-src/main/resources/application-local.properties
+node_modules
