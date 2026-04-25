@@ -46,16 +46,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/user/**").hasAnyAuthority("USER", "LECTURER")
                 .requestMatchers("/api/notifications/**").authenticated()
                 .anyRequest().authenticated()
-    .requestMatchers("/api/auth/**").permitAll()
-    .requestMatchers("/login/oauth2/**").permitAll()
-    .requestMatchers("/oauth2/**").permitAll()
-    .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-    .requestMatchers("/api/lecturer/**").hasAuthority("LECTURER")
-    .requestMatchers("/api/technician/**").hasAuthority("TECHNICIAN")
-    .requestMatchers("/api/user/**").hasAnyAuthority("USER", "LECTURER")
-    .requestMatchers("/api/notifications/**").authenticated()
-    .anyRequest().authenticated()
-)
+            )
             .exceptionHandling(ex -> ex
                 .defaultAuthenticationEntryPointFor(
                     new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
