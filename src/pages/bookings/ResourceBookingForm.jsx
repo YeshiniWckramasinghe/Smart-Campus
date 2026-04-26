@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Form, Input, DatePicker, TimePicker, Select, Button, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const { TextArea } = Input;
 
@@ -8,8 +9,37 @@ const ResourceBookingForm = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
-
+  const [loadingResources, setLoadingResources] = useState(false);
+  const [facilityOptions, setFacilityOptions] = useState([]);
+  
   const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const loadFacilities = async () => {
+      setLoadingResources(true);
+      try {
+        const response = await axios.get('http://localhost:8082/api/facilities/options', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const options = Array.isArray(response.data)
+          ? response.data.map((facility) => ({
+            value: `${facility.name}${facility.location ? ` - ${facility.location}` : ''}`,
+            label: `${facility.name} - ${facility.location || 'Location N/A'} (Capacity: ${facility.capacity ?? 'N/A'})`,
+            capacity: facility.capacity,
+          }))
+          : [];
+        setFacilityOptions(options);
+      } catch (error) {
+          message.error("Failed to load facilities");
+      } finally {
+          setLoadingResources(false);
+      }
+    };
+    
+    if (token) {
+        loadFacilities();
+    }
+  }, [token]);
 
   const onFinish = async () => {
     if (!token) {
@@ -58,9 +88,14 @@ const ResourceBookingForm = () => {
             <Form.Item
               name="resourceName"
               label="Resource / Room"
-              rules={[{ required: true, message: 'Please enter the resource/room name' }]}
+              rules={[{ required: true, message: 'Please select the resource/room' }]}
             >
-              <Input placeholder="e.g. Lab A-101" />
+              <Select 
+                placeholder="Select a resource" 
+                options={facilityOptions} 
+                loading={loadingResources}
+                showSearch
+              />
             </Form.Item>
           </div>
 

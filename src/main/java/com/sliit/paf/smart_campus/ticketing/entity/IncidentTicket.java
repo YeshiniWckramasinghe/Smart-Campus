@@ -37,10 +37,8 @@ public class IncidentTicket {
     @Column(nullable = false)
     private String location; // Specific location (e.g. Room 402, Main Library)
 
-    @ElementCollection
-    @CollectionTable(name = "ticket_attachments", joinColumns = @JoinColumn(name = "ticket_id"))
-    @Column(name = "file_path")
-    private List<String> attachmentPaths = new ArrayList<>();
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TicketAttachment> attachmentPaths = new ArrayList<>();
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -108,11 +106,11 @@ public class IncidentTicket {
         this.location = location;
     }
 
-    public List<String> getAttachmentPaths() {
+    public List<TicketAttachment> getAttachmentPaths() {
         return attachmentPaths;
     }
 
-    public void setAttachmentPaths(List<String> attachmentPaths) {
+    public void setAttachmentPaths(List<TicketAttachment> attachmentPaths) {
         this.attachmentPaths = attachmentPaths;
     }
 

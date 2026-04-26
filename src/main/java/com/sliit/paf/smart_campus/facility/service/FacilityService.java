@@ -1,5 +1,6 @@
 package com.sliit.paf.smart_campus.facility.service;
 
+import com.sliit.paf.smart_campus.facility.dto.FacilityOptionResponse;
 import com.sliit.paf.smart_campus.facility.dto.FacilityRequest;
 import com.sliit.paf.smart_campus.facility.entity.Facility;
 import com.sliit.paf.smart_campus.facility.entity.FacilityStatus;
@@ -73,5 +74,15 @@ public class FacilityService {
     public void deleteFacility(Long id) {
         Facility facility = getFacilityById(id);
         facilityRepository.delete(facility);
+    }
+
+    public List<FacilityOptionResponse> getFacilityOptions() {
+        return facilityRepository.findAllByOrderByNameAsc().stream()
+                .map(facility -> new FacilityOptionResponse(
+                        facility.getId(),
+                        facility.getName(),
+                        facility.getLocation(),
+                        facility.getCapacity()))
+                .toList();
     }
 }

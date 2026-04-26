@@ -1,5 +1,6 @@
 package com.sliit.paf.smart_campus.facility.controller;
 
+import com.sliit.paf.smart_campus.facility.dto.FacilityOptionResponse;
 import com.sliit.paf.smart_campus.facility.entity.Facility;
 import com.sliit.paf.smart_campus.facility.entity.FacilityType;
 import com.sliit.paf.smart_campus.facility.service.FacilityService;
@@ -30,9 +31,8 @@ public class FacilityPublicController {
         return ResponseEntity.ok(facilities);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Facility> getFacilityById(@PathVariable Long id) {
-        Facility facility = facilityService.getFacilityById(id);
-        return ResponseEntity.ok(facility);
+    @GetMapping("/options")
+    public ResponseEntity<List<FacilityOptionResponse>> getFacilityOptions() {
+        return ResponseEntity.ok(facilityService.getFacilityOptions());
     }
 }

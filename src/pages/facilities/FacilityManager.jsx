@@ -34,7 +34,9 @@ const FacilityManager = () => {
   const fetchFacilities = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8082/api/facilities');
+      const response = await axios.get('http://localhost:8082/api/facilities', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
       setFacilities(response.data);
     } catch (error) {
       message.error('Failed to fetch facilities');
@@ -67,7 +69,9 @@ const FacilityManager = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8082/api/admin/facilities/${id}`);
+      await axios.delete(`http://localhost:8082/api/admin/facilities/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
       message.success('Facility deleted successfully');
       fetchFacilities();
     } catch (error) {
@@ -79,10 +83,14 @@ const FacilityManager = () => {
     try {
       const values = await form.validateFields();
       if (editingId) {
-        await axios.put(`http://localhost:8082/api/admin/facilities/${editingId}`, values);
+        await axios.put(`http://localhost:8082/api/admin/facilities/${editingId}`, values, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
         message.success('Facility updated successfully');
       } else {
-        await axios.post('http://localhost:8082/api/admin/facilities', values);
+        await axios.post('http://localhost:8082/api/admin/facilities', values, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
         message.success('Facility added successfully');
       }
       setIsModalVisible(false);

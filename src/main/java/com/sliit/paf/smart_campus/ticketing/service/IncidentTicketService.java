@@ -33,7 +33,7 @@ public class IncidentTicketService {
             throw new IllegalArgumentException("A maximum of 3 attachments are allowed per ticket.");
         }
 
-        List<String> filePaths = new ArrayList<>();
+        List<com.sliit.paf.smart_campus.ticketing.entity.TicketAttachment> attachments = new ArrayList<>();
         if (files != null) {
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
@@ -42,12 +42,13 @@ public class IncidentTicketService {
                          throw new IllegalArgumentException("Only JPEG and PNG images are allowed.");
                     }
                     String path = fileStorageService.storeFile(file);
-                    filePaths.add(path);
+                    com.sliit.paf.smart_campus.ticketing.entity.TicketAttachment attachment = new com.sliit.paf.smart_campus.ticketing.entity.TicketAttachment(path, ticket);
+                    attachments.add(attachment);
                 }
             }
         }
         
-        ticket.setAttachmentPaths(filePaths);
+        ticket.setAttachmentPaths(attachments);
         ticket.setStatus(TicketStatus.OPEN);
         return ticketRepository.save(ticket);
     }

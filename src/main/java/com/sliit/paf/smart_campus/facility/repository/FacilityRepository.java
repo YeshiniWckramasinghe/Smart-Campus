@@ -12,4 +12,5 @@ public interface FacilityRepository extends JpaRepository<Facility, Long> {
     List<Facility> findByType(FacilityType type);
     List<Facility> findByCapacityGreaterThanEqual(Integer capacity);
     List<Facility> findByLocationContainingIgnoreCase(String location);
+    List<Facility> findAllByOrderByNameAsc();
 }
