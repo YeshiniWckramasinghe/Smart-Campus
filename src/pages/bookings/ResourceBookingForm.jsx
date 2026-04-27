@@ -78,7 +78,7 @@ const ResourceBookingForm = () => {
     const loadFacilities = async () => {
       setLoadingResources(true);
       try {
-        const response = await axios.get('/api/facilities');
+        const response = await axios.get('/api/facility-options');
         const options = Array.isArray(response.data)
           ? response.data.map((facility) => ({
               value: `${facility.name}${facility.location ? ` - ${facility.location}` : ''}`,
