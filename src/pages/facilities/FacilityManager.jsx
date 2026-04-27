@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Table, Button, Modal, Form, Input, Select, InputNumber, message, Tag, Space, Descriptions, Tooltip } from 'antd';
-import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined, SearchOutlined, AppstoreOutlined, BuildOutlined, CheckCircleOutlined, StopOutlined } from '@ant-design/icons';
+import { EyeOutlined, EditOutlined, DeleteOutlined, PlusOutlined, SearchOutlined, AppstoreOutlined, BuildOutlined, CheckCircleOutlined, StopOutlined, CalendarOutlined, FilePdfOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const { Option } = Select;
 
@@ -18,6 +21,7 @@ const StatCard = ({ title, value, icon, gradient }) => (
 );
 
 const FacilityManager = () => {
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user')) || {};
   const isAdmin = user.role === 'ADMIN';
 
@@ -117,6 +121,110 @@ const FacilityManager = () => {
     };
   }, [facilities]);
 
+  const generateReport = () => {
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFillColor(31, 41, 55);
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Smart Campus', 14, 20);
+    
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Facility Management Report', 14, 30);
+    
+    const date = new Date().toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+    doc.setFontSize(10);
+    doc.setTextColor(200, 200, 200);
+    doc.text(`Generated: ${date}`, 120, 30);
+
+    // Summary Statistics
+    doc.setTextColor(50, 50, 50);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Facility Summary Overview', 14, 50);
+
+    const drawStatBox = (x, y, title, value, color) => {
+      doc.setDrawColor(color[0], color[1], color[2]);
+      doc.setFillColor(color[0], color[1], color[2]);
+      doc.rect(x, y, 42, 20, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(8);
+      doc.text(title, x + 21, y + 8, { align: 'center' });
+      
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text(value?.toString() || '0', x + 21, y + 16, { align: 'center' });
+    };
+
+    drawStatBox(14, 55, 'Total Facilities', stats.total, [59, 130, 246]);
+    drawStatBox(60, 55, 'Active', stats.active, [16, 185, 129]);
+    drawStatBox(106, 55, 'Out of Service', stats.outOfService, [239, 68, 68]);
+    drawStatBox(152, 55, 'Total Capacity', stats.capacity, [139, 92, 246]);
+
+    // Table
+    const tableColumn = ["ID", "Name", "Type", "Capacity", "Location", "Status"];
+    const tableRows = [];
+
+    facilities.forEach(facility => {
+      const facilityData = [
+        facility.id,
+        facility.name,
+        facility.type?.replace('_', ' ') || '-',
+        facility.capacity,
+        facility.location,
+        facility.status?.replace('_', ' ') || '-'
+      ];
+      tableRows.push(facilityData);
+    });
+
+    autoTable(doc, {
+      startY: 85,
+      head: [tableColumn],
+      body: tableRows,
+      theme: 'grid',
+      headStyles: { fillColor: [59, 130, 246], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [240, 248, 255] },
+      styles: { fontSize: 9, cellPadding: 4 },
+      columnStyles: {
+        0: { cellWidth: 15 },
+        1: { fontStyle: 'bold' },
+        3: { halign: 'center' },
+        5: { fontStyle: 'bold' }
+      },
+      didParseCell: function(data) {
+        if (data.section === 'body' && data.column.index === 5) {
+          if (data.cell.raw === 'ACTIVE') {
+            data.cell.styles.textColor = [22, 163, 74];
+          } else {
+            data.cell.styles.textColor = [220, 38, 38];
+          }
+        }
+      }
+    });
+
+    // Footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+      doc.text('Smart Campus Management System', 14, doc.internal.pageSize.height - 10);
+    }
+
+    doc.save(`Facility_Report_${new Date().getTime()}.pdf`);
+    message.success('Report generated successfully!');
+  };
+
   const columns = [
     {
       title: 'Name',
@@ -180,6 +288,11 @@ const FacilityManager = () => {
       key: 'actions',
       render: (_, record) => (
         <Space size="small">
+          {!isAdmin && (
+            <Tooltip title="Book Now">
+              <Button type="text" className="text-green-500 hover:text-green-700 hover:bg-green-50" icon={<CalendarOutlined />} onClick={() => navigate('/bookings/new', { state: { facilityId: record.id } })} />
+            </Tooltip>
+          )}
           <Tooltip title="View Details">
             <Button type="text" className="text-blue-500 hover:text-blue-700 hover:bg-blue-50" icon={<EyeOutlined />} onClick={() => handleView(record)} />
           </Tooltip>
@@ -211,15 +324,26 @@ const FacilityManager = () => {
             <p className="text-blue-200 text-lg max-w-xl">Monitor, manage, and configure all campus facilities and resources from a central command center.</p>
           </div>
           {isAdmin && (
-            <Button 
-              type="primary" 
-              size="large" 
-              icon={<PlusOutlined />} 
-              onClick={handleAdd}
-              className="mt-6 md:mt-0 bg-blue-500 hover:bg-blue-400 border-none shadow-lg shadow-blue-500/50 h-12 px-8 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105"
-            >
-              New Facility
-            </Button>
+            <div className="flex flex-col sm:flex-row mt-6 md:mt-0 gap-4">
+              <Button 
+                type="default" 
+                size="large" 
+                icon={<FilePdfOutlined />} 
+                onClick={generateReport}
+                className="bg-white/10 hover:bg-white/20 border-white/20 text-white shadow-lg h-12 px-6 rounded-full font-semibold transition-all duration-300 hover:scale-105 backdrop-blur-sm"
+              >
+                Generate Report
+              </Button>
+              <Button 
+                type="primary" 
+                size="large" 
+                icon={<PlusOutlined />} 
+                onClick={handleAdd}
+                className="bg-blue-500 hover:bg-blue-400 border-none shadow-lg shadow-blue-500/50 h-12 px-8 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105"
+              >
+                New Facility
+              </Button>
+            </div>
           )}
         </div>
       </div>
@@ -349,8 +473,13 @@ const FacilityManager = () => {
         open={isViewModalVisible}
         onCancel={() => setIsViewModalVisible(false)}
         footer={[
-          <Button key="close" type="primary" onClick={() => setIsViewModalVisible(false)} className="bg-indigo-600 rounded-lg">
-            Done
+          !isAdmin ? (
+            <Button key="book" type="primary" onClick={() => navigate('/bookings/new', { state: { facilityId: viewingFacility?.id } })} className="bg-green-600 hover:bg-green-500 rounded-lg">
+              Book Now
+            </Button>
+          ) : null,
+          <Button key="close" type="default" onClick={() => setIsViewModalVisible(false)} className="rounded-lg">
+            Close
           </Button>
         ]}
         width={700}

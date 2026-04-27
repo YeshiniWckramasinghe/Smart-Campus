@@ -91,13 +91,7 @@ const Navbar = () => {
                       onClick={() => setActiveDropdown(null)}>
                       <span>🏛️</span><span>Browse Facilities</span>
                     </Link>
-                    <Link to="/facilities/search"
-                      className="flex items-center space-x-2 px-4 py-2.5 text-sm 
-                                 text-gray-300 hover:bg-blue-600 hover:text-white 
-                                 rounded-lg transition duration-150"
-                      onClick={() => setActiveDropdown(null)}>
-                      <span>🔍</span><span>Search & Filter</span>
-                    </Link>
+
                     <Link to="/facilities/equipment"
                       className="flex items-center space-x-2 px-4 py-2.5 text-sm 
                                  text-gray-300 hover:bg-blue-600 hover:text-white 
@@ -287,9 +281,7 @@ const Navbar = () => {
           <Link to="/facilities" className="block text-gray-300 hover:text-white 
                                              hover:bg-gray-700 px-3 py-2 rounded-lg text-sm"
             onClick={() => setIsOpen(false)}>🏛️ Browse Facilities</Link>
-          <Link to="/facilities/search" className="block text-gray-300 hover:text-white 
-                                                    hover:bg-gray-700 px-3 py-2 rounded-lg text-sm"
-            onClick={() => setIsOpen(false)}>🔍 Search & Filter</Link>
+
 
           <p className="text-xs text-gray-500 uppercase px-3 pt-2">Bookings</p>
           <Link to="/bookings/new" className="block text-gray-300 hover:text-white 
