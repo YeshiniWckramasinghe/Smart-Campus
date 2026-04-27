@@ -241,14 +241,12 @@ const FacilityManager = () => {
         { text: 'Lecture Hall', value: 'LECTURE_HALL' },
         { text: 'Lab', value: 'LAB' },
         { text: 'Meeting Room', value: 'MEETING_ROOM' },
-        { text: 'Equipment', value: 'EQUIPMENT' },
       ],
       onFilter: (value, record) => record.type === value,
       render: (type) => {
         let color = 'blue';
         if (type === 'LAB') color = 'purple';
         if (type === 'MEETING_ROOM') color = 'cyan';
-        if (type === 'EQUIPMENT') color = 'orange';
         return <Tag color={color} className="rounded-full px-3">{type}</Tag>;
       },
     },
@@ -420,16 +418,29 @@ const FacilityManager = () => {
                 <Option value="LECTURE_HALL">Lecture Hall</Option>
                 <Option value="LAB">Lab</Option>
                 <Option value="MEETING_ROOM">Meeting Room</Option>
-                <Option value="EQUIPMENT">Equipment</Option>
               </Select>
             </Form.Item>
 
             <Form.Item
               name="capacity"
               label={<span className="font-medium text-gray-700">Capacity</span>}
-              rules={[{ required: true, message: 'Please enter capacity' }]}
+              rules={[
+                { required: true, message: 'Please enter capacity' },
+                { type: 'integer', min: 1, message: 'Only valid numbers are allowed' }
+              ]}
             >
-              <InputNumber size="large" min={1} style={{ width: '100%' }} placeholder="e.g. 50" className="rounded-lg" />
+              <InputNumber 
+                size="large" 
+                min={1} 
+                style={{ width: '100%' }} 
+                placeholder="e.g. 50" 
+                className="rounded-lg" 
+                onKeyPress={(event) => {
+                  if (!/[0-9]/.test(event.key)) {
+                    event.preventDefault();
+                  }
+                }}
+              />
             </Form.Item>
           </div>
 

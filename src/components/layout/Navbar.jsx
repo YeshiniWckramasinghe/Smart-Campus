@@ -91,14 +91,6 @@ const Navbar = () => {
                       onClick={() => setActiveDropdown(null)}>
                       <span>🏛️</span><span>Browse Facilities</span>
                     </Link>
-
-                    <Link to="/facilities/equipment"
-                      className="flex items-center space-x-2 px-4 py-2.5 text-sm 
-                                 text-gray-300 hover:bg-blue-600 hover:text-white 
-                                 rounded-lg transition duration-150"
-                      onClick={() => setActiveDropdown(null)}>
-                      <span>📦</span><span>Equipment</span>
-                    </Link>
                   </div>
                 </div>
               )}
