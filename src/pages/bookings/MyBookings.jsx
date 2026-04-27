@@ -259,6 +259,12 @@ const MyBookings = () => {
                 <p><span className="font-semibold text-gray-800">Time:</span> {formatTime(booking.startTime)} - {formatTime(booking.endTime)}</p>
                 <p><span className="font-semibold text-gray-800">Expected Capacity:</span> {booking.expectedCapacity}</p>
                 <p className="pt-1 border-t border-gray-100 mt-2"><span className="font-semibold text-gray-800">Purpose:</span> {booking.purpose || '-'}</p>
+                {booking.status === 'REJECTED' && booking.adminReason && (
+                  <p className="pt-1 border-t border-red-100 mt-2">
+                    <span className="font-semibold text-red-700">Rejection Reason:</span>{' '}
+                    <span className="text-red-600">{booking.adminReason}</span>
+                  </p>
+                )}
               </div>
             </div>
           );})}
