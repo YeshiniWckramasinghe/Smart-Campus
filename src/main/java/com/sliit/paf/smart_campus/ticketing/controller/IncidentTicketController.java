@@ -1,7 +1,9 @@
 package com.sliit.paf.smart_campus.ticketing.controller;
 
+import com.sliit.paf.smart_campus.ticketing.dto.CreateCommentRequest;
 import com.sliit.paf.smart_campus.ticketing.dto.CreateTicketRequest;
 import com.sliit.paf.smart_campus.ticketing.dto.UpdateStatusRequest;
+import com.sliit.paf.smart_campus.ticketing.entity.Comment;
 import com.sliit.paf.smart_campus.ticketing.entity.IncidentTicket;
 import com.sliit.paf.smart_campus.ticketing.service.IncidentTicketService;
 import jakarta.validation.Valid;
@@ -82,6 +84,17 @@ public class IncidentTicketController {
 
         IncidentTicket updatedTicket = ticketService.updateTicketStatus(id, request.getStatus());
         return ResponseEntity.ok(updatedTicket);
+    }
+
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<Comment> addComment(
+            @PathVariable Long id,
+            @Valid @RequestBody CreateCommentRequest request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        String authorId = (userDetails != null) ? userDetails.getUsername() : "anonymousUser";
+        Comment createdComment = ticketService.addComment(id, request.getContent(), authorId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
     }
 
     @DeleteMapping("/{id}/comments/{cid}")
