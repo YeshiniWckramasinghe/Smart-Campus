@@ -1,12 +1,35 @@
-import React from 'react';
-import { List, Button, message, Avatar, Popconfirm } from 'antd';
+import React, { useState } from 'react';
+import { List, Button, message, Avatar, Popconfirm, Input } from 'antd';
 import { UserOutlined, DeleteOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 const TicketComments = ({ ticketId, initialComments, onUpdate }) => {
     const comments = initialComments || [];
-    // Current user context mocked for assessment
-    const currentUser = 'user123'; 
+    const [newComment, setNewComment] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+
+    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const currentUserId = currentUser.email || currentUser.name || 'anonymousUser';
+
+    const handleAdd = async () => {
+        const content = newComment.trim();
+        if (!content) {
+            message.warning('Please enter a comment.');
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            await axios.post(`/api/tickets/${ticketId}/comments`, { content });
+            message.success('Comment added');
+            setNewComment('');
+            if (onUpdate) onUpdate();
+        } catch (error) {
+            message.error('Failed to add comment. Please sign in again.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     const handleDelete = async (commentId) => {
         try {
@@ -27,7 +50,7 @@ const TicketComments = ({ ticketId, initialComments, onUpdate }) => {
                     dataSource={comments}
                     renderItem={(item) => (
                     <List.Item
-                        actions={item.authorId === currentUser ? [
+                        actions={item.authorId === currentUserId ? [
                             <Popconfirm title="Delete?" onConfirm={() => handleDelete(item.id)}>
                                 <Button type="text" danger icon={<DeleteOutlined />} />
                             </Popconfirm>
@@ -44,7 +67,17 @@ const TicketComments = ({ ticketId, initialComments, onUpdate }) => {
             </div>
 
             <div className="mt-auto border-t pt-4">
-                 <p className="text-gray-500 text-sm mb-2 text-center">Note: API POST endpoint for comments is currently mocked or requires backend setup from previous phase</p>
+                <Input.TextArea
+                    rows={3}
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Write a comment..."
+                />
+                <div className="mt-3 flex justify-end">
+                    <Button type="primary" onClick={handleAdd} loading={submitting}>
+                        Send
+                    </Button>
+                </div>
             </div>
         </div>
     );

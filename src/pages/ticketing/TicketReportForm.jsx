@@ -25,8 +25,10 @@ const TicketReportForm = () => {
             formData.append('location', values.location);
             formData.append('reporterId', currentUser.email || currentUser.name || 'anonymousUser');
             
-            fileList.forEach(file => {
-                formData.append('files', file.originFileObj);
+            fileList.forEach((file) => {
+                if (file && file.originFileObj instanceof File) {
+                    formData.append('files', file.originFileObj);
+                }
             });
 
             const res = await axios.post('/api/tickets', formData);

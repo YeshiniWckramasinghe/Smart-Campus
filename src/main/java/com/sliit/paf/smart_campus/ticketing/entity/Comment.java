@@ -1,5 +1,6 @@
 package com.sliit.paf.smart_campus.ticketing.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -21,6 +22,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id", nullable = false)
+    @JsonIgnore
     private IncidentTicket ticket;
 
     @CreationTimestamp
